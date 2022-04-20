@@ -3,8 +3,6 @@ import asyncio
 import logging
 from typing import Any, Dict, List, Optional
 
-import ujson
-
 import hummingbot.connector.exchange.bitmart.bitmart_constants as CONSTANTS
 from hummingbot.connector.exchange.bitmart.bitmart_order_book import BitmartOrderBook
 from hummingbot.connector.exchange.bitmart.bitmart_utils import convert_from_exchange_trading_pair, \
@@ -170,7 +168,7 @@ class BitmartAPIOrderBookDataSource(OrderBookTrackerDataSource):
                             if messages is None:
                                 continue
 
-                            messages = ujson.loads(messages)
+                            # messages = ujson.loads(messages)
 
                             if "errorCode" in messages.keys() or \
                                "data" not in messages.keys() or \
@@ -222,7 +220,7 @@ class BitmartAPIOrderBookDataSource(OrderBookTrackerDataSource):
                 for trading_pair in self._trading_pairs:
                     ws_message: WSRequest = WSRequest({
                         "op": "subscribe",
-                        "args": [f"spot/depth400:{convert_to_exchange_trading_pair(trading_pair)}"]
+                        "args": [f"spot/depth50:{convert_to_exchange_trading_pair(trading_pair)}"]
                     })
                     await ws.send(ws_message)
 
@@ -233,14 +231,14 @@ class BitmartAPIOrderBookDataSource(OrderBookTrackerDataSource):
                             if messages is None:
                                 continue
 
-                            messages = ujson.loads(messages)
+                            # messages = ujson.loads(messages)
 
                             if "errorCode" in messages.keys() or \
                                "data" not in messages.keys() or \
                                "table" not in messages.keys():
                                 continue
 
-                            if messages["table"] != "spot/depth5":
+                            if messages["table"] != "spot/depth50":
                                 # Not an order book message
                                 continue
 
